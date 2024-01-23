@@ -10,6 +10,7 @@ import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 文章表
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
  */
 @TableName(value ="sg_article")
 @SuppressWarnings("serial")
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -110,6 +112,12 @@ public class Article implements Serializable {
      */
     @TableField(value = "del_flag")
     private Integer delFlag;
+
+    /**
+     * 文章类别名称
+     */
+    @TableField(exist = false)
+    private String categoryName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
