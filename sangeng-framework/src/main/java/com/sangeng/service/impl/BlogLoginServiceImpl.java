@@ -4,7 +4,10 @@ import com.mysql.cj.log.Log;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.LoginUser;
 import com.sangeng.domain.entity.User;
+import com.sangeng.domain.vo.BlogUserLoginVo;
+import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.service.BlogLoginService;
+import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.JwtUtil;
 import com.sangeng.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +38,15 @@ public class BlogLoginServiceImpl implements BlogLoginService {
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         String userID = loginUser.getUser().getId().toString();
         String jwt = JwtUtil.createJWT(userID);
+        // 将用户信息存入redis中
+        redisCache.setCacheObject("bloglogin:"+userID,loginUser);
 
 
-        return null;
+        UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
+        BlogUserLoginVo vo = new BlogUserLoginVo(jwt, userInfoVo);
+
+
+
+        return ResponseResult.okResult(vo);
     }
 }
