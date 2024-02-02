@@ -3,10 +3,13 @@ package com.sangeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.util.StringUtils;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Comment;
 import com.sangeng.domain.vo.CommentVo;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.enums.AppHttpCodeEnum;
+import com.sangeng.exception.SystemException;
 import com.sangeng.service.CommentService;
 import com.sangeng.mapper.CommentMapper;
 import com.sangeng.service.UserService;
@@ -49,6 +52,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
         }
         return ResponseResult.okResult(new PageVo(commentVoList,page.getTotal()));
 
+    }
+
+    @Override
+    public ResponseResult addComment(Comment comment) {
+        if(!StringUtils.hasText(comment.getContent())){
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+        save(comment);
+        return ResponseResult.okResult();
     }
 
     /**
