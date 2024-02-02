@@ -3,6 +3,7 @@ package com.sangeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sangeng.constants.SystemConstants;
 import org.springframework.util.StringUtils;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Comment;
@@ -32,13 +33,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
     private UserService userService;
 
     @Override
-    public ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize) {
+    public ResponseResult commentList(String commentType,Long articleId, Integer pageNum, Integer pageSize) {
         // 查询文章的根评论
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        // 判断 articleid
-        queryWrapper.eq(Comment::getArticleId, articleId);
+        // 判断 articleid，当评论是文章的评论的时候
+        queryWrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(commentType),Comment::getArticleId, articleId);
         // 根评论的id为-1
         queryWrapper.eq(Comment::getRootId, -1);
+
+        // 查询评论类型
+        queryWrapper.eq(Comment::getType,commentType);
 
         // 分页查询
         Page<Comment> page = new Page<Comment>(pageNum, pageSize);
