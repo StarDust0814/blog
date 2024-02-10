@@ -17,8 +17,13 @@ spring:
     port: 6379
     database: 1
     password: frank
+
   main:
     allow-circular-references: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 mybatis-plus:
   configuration:

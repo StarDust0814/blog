@@ -29,20 +29,4 @@ public class ViewCountRunner implements CommandLineRunner {
         Map<String, Integer> viewCountMap = articles.stream().collect(Collectors.toMap(article -> article.getId().toString(), article -> article.getViewCount().intValue()));
         redisCache.setCacheMap("article:viewCount",viewCountMap);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
