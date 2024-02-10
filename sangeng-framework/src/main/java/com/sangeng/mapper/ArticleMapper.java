@@ -2,6 +2,7 @@ package com.sangeng.mapper;
 
 import com.sangeng.domain.entity.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Component;
 
 /**
 * @author RS.Meta
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-01-22 14:53:13
 * @Entity com.sangeng.domain.entity.Article
 */
+@Component
 public interface ArticleMapper extends BaseMapper<Article> {
 
 }
