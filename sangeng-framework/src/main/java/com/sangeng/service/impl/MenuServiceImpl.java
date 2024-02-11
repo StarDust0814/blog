@@ -6,6 +6,7 @@ import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.entity.Menu;
 import com.sangeng.service.MenuService;
 import com.sangeng.mapper.MenuMapper;
+import com.sangeng.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +35,34 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
 
         }
         return getBaseMapper().selectPermsByUserId(id);
+    }
+
+    @Override
+    public List<Menu> selectRouterMenuTreeByUserId(Long userId) {
+        MenuMapper menuMapper = getBaseMapper();
+        List<Menu> menus = null;
+        if(SecurityUtils.isAdmin()){
+            menus = menuMapper.selectAllRouterMenu();
+        }else{
+            menus = menuMapper.selectRouterMenuTreeByUserId(userId);
+        }
+
+        List<Menu> menuTree = builderMenuTree(menus,0L);
+        return menuTree;
+    }
+
+    private List<Menu> builderMenuTree(List<Menu> menus, Long parentId) {
+        List<Menu> menuTree = menus.stream().filter(menu -> menu.getParentId().equals(parentId))
+                .map(menu -> menu.setChildren(getChildren(menu,menus)))
+                .collect(Collectors.toList());
+        return menuTree;
+    }
+
+    private List<Menu> getChildren(Menu menu, List<Menu> menus) {
+        List<Menu> childrenList = menus.stream().filter(m->m.getParentId().equals(menu.getId()))
+                .map(m->m.setChildren(getChildren(m,menus)))
+                .collect(Collectors.toList());
+        return childrenList;
     }
 }
 

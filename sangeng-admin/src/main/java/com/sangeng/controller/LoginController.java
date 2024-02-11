@@ -2,8 +2,10 @@ package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.LoginUser;
+import com.sangeng.domain.entity.Menu;
 import com.sangeng.domain.entity.User;
 import com.sangeng.domain.vo.AdminUserInfoVo;
+import com.sangeng.domain.vo.RoutersVo;
 import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
@@ -54,5 +56,17 @@ public class LoginController {
         // 封装数据返回
         AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms, roleKeyList, userInfoVo);
         return ResponseResult.okResult(adminUserInfoVo);
+    }
+
+    @GetMapping("/getRouters")
+    public ResponseResult<RoutersVo> getRouters(){
+        Long userId = SecurityUtils.getUserId();
+        List<Menu> menus =  menuService.selectRouterMenuTreeByUserId(userId);
+        return ResponseResult.okResult(new RoutersVo(menus));
+    }
+
+    @PostMapping("/user/logout")
+    public ResponseResult logout(){
+        return loginService.logout();
     }
 }
