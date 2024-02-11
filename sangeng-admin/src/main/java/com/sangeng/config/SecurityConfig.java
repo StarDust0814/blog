@@ -51,12 +51,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 允许匿名访问
-//                .antMatchers("/login").anonymous()
+                .antMatchers("/user/login").anonymous()
 //                // 这里还可以配置其他后端接口是否要进行鉴权验证
 //                .antMatchers("/logout").authenticated()
 //                .antMatchers("/user/userInfo").authenticated()
                 //.antMatchers("/upload").authenticated()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
         // 配置处理失败时自定义的相应内容
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
