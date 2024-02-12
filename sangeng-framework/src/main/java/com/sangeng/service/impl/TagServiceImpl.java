@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.dto.TagDto;
 import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
@@ -63,6 +64,18 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         Tag tag = baseMapper.selectById(id);
         TagVo tagVo = BeanCopyUtils.copyBean(tag, TagVo.class);
         return ResponseResult.okResult(tagVo);
+    }
+
+    @Override
+    public ResponseResult updateTag(TagDto tagDto) {
+        Long id = tagDto.getId();
+        if(id == null){
+            throw new SystemException(AppHttpCodeEnum.FIELD_NOT_NULL);
+        }
+        Tag tag = BeanCopyUtils.copyBean(tagDto, Tag.class);
+        updateById(tag);
+
+        return ResponseResult.okResult();
     }
 
 }

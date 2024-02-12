@@ -1,6 +1,7 @@
 package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.dto.TagDto;
 import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.vo.PageVo;
 import com.sangeng.service.TagService;
@@ -35,7 +36,10 @@ public class TagController {
         return tagService.getTagInfo(id);
     }
 
-
+    @PutMapping
+    public ResponseResult updateTag(@RequestBody TagDto tagDto) {
+        return tagService.updateTag(tagDto);
+    }
 
 }
 
