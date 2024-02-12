@@ -1,6 +1,7 @@
 package com.sangeng.service;
 
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.dto.AddArticleDto;
 import com.sangeng.domain.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -18,4 +19,6 @@ public interface ArticleService extends IService<Article> {
     ResponseResult getArticleDetail(Long id);
 
     ResponseResult updateViewCount(Long id);
+
+    ResponseResult add(AddArticleDto addArticleDto);
 }

@@ -6,6 +6,9 @@ import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.entity.Tag;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.TagVo;
+
+import java.util.List;
 
 /**
 * @author RS.Meta
@@ -23,4 +26,6 @@ public interface TagService extends IService<Tag> {
     ResponseResult getTagInfo(Long id);
 
     ResponseResult updateTag(TagDto tagDto);
+
+    List<TagVo> listAllTag();
 }

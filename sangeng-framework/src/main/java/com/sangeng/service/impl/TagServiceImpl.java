@@ -17,6 +17,8 @@ import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 /**
 * @author RS.Meta
 * @description 针对表【sg_tag(标签)】的数据库操作Service实现
@@ -76,6 +78,15 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         updateById(tag);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public List<TagVo> listAllTag() {
+        LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Tag::getId,Tag::getName,Tag::getRemark);
+        List<Tag> list = list(wrapper);
+        List<TagVo> tagVos = BeanCopyUtils.copyBeanList(list, TagVo.class);
+        return tagVos;
     }
 
 }
