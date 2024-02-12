@@ -52,6 +52,7 @@ public class Tag implements Serializable {
     /**
      * 删除标志（0代表未删除，1代表已删除）
      */
+    @TableLogic
     @TableField(value = "del_flag")
     private Integer delFlag;
 

@@ -1,5 +1,6 @@
 package com.sangeng.config;
 
+import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -14,4 +15,6 @@ public class MybatisPlusConfig {
         mybatisplusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
         return mybatisplusInterceptor;
     }
+
+
 }

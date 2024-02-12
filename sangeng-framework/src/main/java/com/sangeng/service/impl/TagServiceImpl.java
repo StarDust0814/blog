@@ -47,6 +47,13 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         save(tag);
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult deleteTag(Long id) {
+        removeById(id);
+        return ResponseResult.okResult();
+    }
+
 }
 
 
