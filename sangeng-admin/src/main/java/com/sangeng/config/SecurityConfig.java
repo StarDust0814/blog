@@ -55,8 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                // 这里还可以配置其他后端接口是否要进行鉴权验证
                 .antMatchers("/logout").authenticated()
                 .antMatchers("/content/tag").authenticated()
-//                .antMatchers("/user/userInfo").authenticated()
-                //.antMatchers("/upload").authenticated()
+                .antMatchers("/content/tag/{id}").authenticated()
                 .anyRequest().permitAll();
 
         // 配置处理失败时自定义的相应内容

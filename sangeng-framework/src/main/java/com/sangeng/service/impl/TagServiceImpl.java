@@ -7,6 +7,7 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.TagVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
 import com.sangeng.service.TagService;
@@ -52,6 +53,16 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
     public ResponseResult deleteTag(Long id) {
         removeById(id);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getTagInfo(Long id) {
+        if(id == null){
+            throw new SystemException(AppHttpCodeEnum.FIELD_NOT_NULL);
+        }
+        Tag tag = baseMapper.selectById(id);
+        TagVo tagVo = BeanCopyUtils.copyBean(tag, TagVo.class);
+        return ResponseResult.okResult(tagVo);
     }
 
 }
