@@ -7,8 +7,11 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.enums.AppHttpCodeEnum;
+import com.sangeng.exception.SystemException;
 import com.sangeng.service.TagService;
 import com.sangeng.mapper.TagMapper;
+import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -33,6 +36,16 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
 
+    }
+
+    @Override
+    public ResponseResult addTag(TagListDto tagListDto) {
+        if(!StringUtils.hasText(tagListDto.getName()) || !StringUtils.hasText(tagListDto.getRemark())){
+            throw new SystemException(AppHttpCodeEnum.FIELD_NOT_NULL);
+        }
+        Tag tag = BeanCopyUtils.copyBean(tagListDto, Tag.class);
+        save(tag);
+        return ResponseResult.okResult();
     }
 }
 

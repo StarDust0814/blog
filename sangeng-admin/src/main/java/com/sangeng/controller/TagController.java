@@ -5,9 +5,7 @@ import com.sangeng.domain.dto.TagListDto;
 import com.sangeng.domain.vo.PageVo;
 import com.sangeng.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
 
@@ -21,4 +19,11 @@ public class TagController {
     public ResponseResult<PageVo> list(Integer pageNum, Integer pageSize, TagListDto tagListDto ){
         return tagService.pageTagList(pageNum,pageSize,tagListDto);
     }
+
+    @PostMapping
+    public ResponseResult addTag(@RequestBody TagListDto tagListDto){
+         return tagService.addTag(tagListDto);
+     }
 }
+
+
