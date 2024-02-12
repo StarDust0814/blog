@@ -2,6 +2,7 @@ package com.sangeng.mapper;
 
 import com.sangeng.domain.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author RS.Meta
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-01-23 19:00:17
 * @Entity com.sangeng.domain.entity.User
 */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }

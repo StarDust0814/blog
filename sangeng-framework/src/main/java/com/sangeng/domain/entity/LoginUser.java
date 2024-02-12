@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 专门服务于security框架登录时返回的接口
@@ -20,6 +21,8 @@ import java.util.Collection;
 public class LoginUser implements UserDetails {
 
     private User user;
+
+    private List<String> permissions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

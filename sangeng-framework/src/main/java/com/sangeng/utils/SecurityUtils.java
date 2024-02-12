@@ -18,8 +18,8 @@ public class SecurityUtils {
     }
 
     public static Boolean isAdmin(){
-        Long id = getLoginUser().getUser().getId();
-        return id != null && 1L == id;
+        String role = getLoginUser().getUser().getType();
+        return "1".equals(role);
     }
 
     public static Long getUserId(){
