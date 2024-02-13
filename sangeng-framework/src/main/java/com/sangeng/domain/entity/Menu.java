@@ -1,9 +1,7 @@
 package com.sangeng.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -94,25 +92,25 @@ public class Menu implements Serializable {
     /**
      * 创建者
      */
-    @TableField(value = "create_by")
+    @TableField(value = "create_by",fill = FieldFill.INSERT)
     private Long createBy;
 
     /**
      * 创建时间
      */
-    @TableField(value = "create_time")
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
     private Date createTime;
 
     /**
      * 更新者
      */
-    @TableField(value = "update_by")
+    @TableField(value = "update_by",fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
 
     /**
      * 更新时间
      */
-    @TableField(value = "update_time")
+    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
     /**

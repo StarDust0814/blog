@@ -7,6 +7,7 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
 import com.sangeng.domain.vo.MenuListVo;
 import com.sangeng.domain.vo.MenuVo;
+import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.service.MenuService;
 import com.sangeng.mapper.MenuMapper;
 import com.sangeng.utils.BeanCopyUtils;
@@ -71,6 +72,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
                 .collect(Collectors.toList());
 
         return ResponseResult.okResult(menus);
+    }
+
+    @Override
+    public ResponseResult addMenu(Menu menu) {
+        return save(menu) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }
 
     private List<Menu> builderMenuTree(List<Menu> menus, Long parentId) {
