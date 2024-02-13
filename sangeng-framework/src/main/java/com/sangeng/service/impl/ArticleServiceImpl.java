@@ -10,10 +10,9 @@ import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.ArticleTag;
 import com.sangeng.domain.entity.Category;
 import com.sangeng.domain.entity.Tag;
-import com.sangeng.domain.vo.ArticleDetailVo;
-import com.sangeng.domain.vo.ArticleListVo;
-import com.sangeng.domain.vo.HotArticleVo;
-import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.*;
+import com.sangeng.enums.AppHttpCodeEnum;
+import com.sangeng.exception.SystemException;
 import com.sangeng.service.ArticleService;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleTagService;
@@ -141,8 +140,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
     }
-}
 
+    @Override
+    public ResponseResult articleDetail(Long id) {
+        if(id == null){
+            throw new SystemException(AppHttpCodeEnum.FIELD_NOT_NULL);
+        }
+        Article article = baseMapper.selectById(id);
+        return ResponseResult.okResult(article);
+    }
+
+    @Override
+    public ResponseResult updateArticle(AddArticleDto addArticleDto) {
+        Article article = BeanCopyUtils.copyBean(addArticleDto, Article.class);
+
+        return updateById(article) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+    }
+}
 
 
 

@@ -24,4 +24,14 @@ public class ArticleController {
                                          @RequestParam(value = "summary",required = false) String summary){
         return articleService.listAllArticle(pageNum,pageSize,title,summary);
     }
+
+    @GetMapping("/{id}")
+    public ResponseResult articleDetail(@PathVariable("id") Long id){
+        return articleService.articleDetail(id);
+    }
+
+    @PutMapping
+    public ResponseResult updateArticle(@RequestBody AddArticleDto addArticleDto){
+        return articleService.updateArticle(addArticleDto);
+    }
 }
