@@ -156,7 +156,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
         return updateById(article) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }
+
+    @Override
+    public ResponseResult deleteArticle(Long id) {
+        if(id == null){
+            throw new SystemException(AppHttpCodeEnum.FIELD_NOT_NULL);
+        }
+        return removeById(id) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+    }
 }
+
+
 
 
 
