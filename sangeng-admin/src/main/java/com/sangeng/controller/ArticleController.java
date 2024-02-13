@@ -4,10 +4,7 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.AddArticleDto;
 import com.sangeng.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/content/article")
@@ -18,5 +15,13 @@ public class ArticleController {
     @PostMapping
     public ResponseResult add(@RequestBody AddArticleDto addArticleDto){
         return articleService.add(addArticleDto);
+    }
+
+    @GetMapping("/list")
+    public ResponseResult listAllArticle(@RequestParam("pageNum") Integer pageNum,
+                                         @RequestParam("pageSize") Integer pageSize,
+                                         @RequestParam(value = "title",required = false) String title,
+                                         @RequestParam(value = "summary",required = false) String summary){
+        return articleService.listAllArticle(pageNum,pageSize,title,summary);
     }
 }
