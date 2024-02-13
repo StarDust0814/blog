@@ -1,10 +1,16 @@
 package com.sangeng.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Role;
+import com.sangeng.domain.entity.Tag;
+import com.sangeng.domain.vo.PageVo;
 import com.sangeng.service.RoleService;
 import com.sangeng.mapper.RoleMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +33,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
             return roleKeys;
         }
         return getBaseMapper().selectRoleKeyByUserId(id);
+    }
+
+    @Override
+    public ResponseResult listAllRole(Integer pageNum, Integer pageSize, String roleName, String status) {
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.hasText(roleName),Role::getRoleName,roleName);
+        queryWrapper.eq(StringUtils.hasText(status),Role::getStatus,status);
+        Page<Role> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page,queryWrapper);
+        PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
+        return ResponseResult.okResult(pageVo);
     }
 }
 
