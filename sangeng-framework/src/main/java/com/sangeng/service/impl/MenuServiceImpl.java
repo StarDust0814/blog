@@ -5,16 +5,20 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
+import com.sangeng.domain.vo.MenuInfoVo;
 import com.sangeng.domain.vo.MenuListVo;
 import com.sangeng.domain.vo.MenuVo;
 import com.sangeng.enums.AppHttpCodeEnum;
+import com.sangeng.exception.SystemException;
 import com.sangeng.service.MenuService;
 import com.sangeng.mapper.MenuMapper;
 import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,6 +81,36 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
     @Override
     public ResponseResult addMenu(Menu menu) {
         return save(menu) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+    }
+
+    @Override
+    public ResponseResult getMenuInfo(Long id) {
+        Menu menu = getById(id);
+        MenuInfoVo menuInfoVo = BeanCopyUtils.copyBean(menu, MenuInfoVo.class);
+        return ResponseResult.okResult(menuInfoVo);
+    }
+
+    @Override
+    public ResponseResult updateMenu(Menu menu) {
+        if(menu.getParentId().equals(menu.getId())){
+            throw new SystemException(AppHttpCodeEnum.MENU_PARENT_ID_ERROR);
+        }
+        return updateById(menu) ?
+                ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+    }
+
+    @Override
+    public ResponseResult deleteMenu(Long menuId) {
+        MenuMapper menuMapper = getBaseMapper();
+        List<Menu> menus = menuMapper.selectAllRouterMenu();
+
+        List<Menu> children = builderMenuTree(menus,menuId);
+
+        if(!CollectionUtils.isEmpty(children)){
+            throw new SystemException(AppHttpCodeEnum.EXIST_MENU_CHILDREN);
+        }
+
+        return removeById(menuId) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }
 
     private List<Menu> builderMenuTree(List<Menu> menus, Long parentId) {

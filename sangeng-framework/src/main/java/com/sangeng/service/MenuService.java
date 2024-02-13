@@ -19,4 +19,10 @@ public interface MenuService extends IService<Menu> {
     ResponseResult listAllMenu(String status, String menuName);
 
     ResponseResult addMenu(Menu menu);
+
+    ResponseResult getMenuInfo(Long id);
+
+    ResponseResult updateMenu(Menu menu);
+
+    ResponseResult deleteMenu(Long menuId);
 }

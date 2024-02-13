@@ -24,4 +24,20 @@ public class MenuController {
     public ResponseResult addMenu(@RequestBody Menu menu){
          return menuService.addMenu(menu);
      }
+
+     @GetMapping("/{id}")
+    public ResponseResult getMenuInfo(@PathVariable Long id){
+        return menuService.getMenuInfo(id);
+     }
+
+     @PutMapping
+    public ResponseResult updateMenu(@RequestBody Menu menu){
+         return menuService.updateMenu(menu);
+     }
+
+     @DeleteMapping("/{menuId}")
+    public ResponseResult deleteMenu(@PathVariable("menuId") Long menuId){
+        return menuService.deleteMenu(menuId);
+     }
+
 }

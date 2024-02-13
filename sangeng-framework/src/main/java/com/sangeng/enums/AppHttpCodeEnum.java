@@ -24,7 +24,9 @@ public enum AppHttpCodeEnum {
     EMAIL_NOT_NULL(510,"邮箱不能为空"),
     NICKNAME_EXIST(511,"昵称已存在"),
     FILE_TYPE_ERROR(512,"文件类型错误"),
-    FIELD_NOT_NULL(513,"字段不能为空");
+    FIELD_NOT_NULL(513,"字段不能为空"),
+    MENU_PARENT_ID_ERROR(514,"修改菜单失败，上级菜单不能选择自己"),
+    EXIST_MENU_CHILDREN(515,"存在子菜单，不允许删除" );
 
     int code;
     String msg;
