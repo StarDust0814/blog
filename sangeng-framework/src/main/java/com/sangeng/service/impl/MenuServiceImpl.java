@@ -3,12 +3,18 @@ package com.sangeng.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.constants.SystemConstants;
+import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
+import com.sangeng.domain.vo.MenuListVo;
+import com.sangeng.domain.vo.MenuVo;
 import com.sangeng.service.MenuService;
 import com.sangeng.mapper.MenuMapper;
+import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +55,22 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
 
         List<Menu> menuTree = builderMenuTree(menus,0L);
         return menuTree;
+    }
+
+    @Override
+    public ResponseResult listAllMenu(String status, String menuName) {
+        LambdaQueryWrapper<Menu> menuLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        menuLambdaQueryWrapper.eq(StringUtils.hasText(status),Menu::getStatus, status);
+        menuLambdaQueryWrapper.like(StringUtils.hasText(menuName),Menu::getMenuName,menuName);
+        List<Menu> list = list(menuLambdaQueryWrapper);
+        List<MenuListVo> menus = list.stream().sorted(Comparator.comparing(Menu::getParentId).thenComparing(Menu::getOrderNum))
+                .map(menu -> {
+                    MenuListVo menuVo = BeanCopyUtils.copyBean(menu, MenuListVo.class);
+                    return menuVo;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseResult.okResult(menus);
     }
 
     private List<Menu> builderMenuTree(List<Menu> menus, Long parentId) {
