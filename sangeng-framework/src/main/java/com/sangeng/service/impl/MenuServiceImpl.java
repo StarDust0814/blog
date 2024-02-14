@@ -7,6 +7,7 @@ import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
 import com.sangeng.domain.vo.MenuInfoVo;
 import com.sangeng.domain.vo.MenuListVo;
+import com.sangeng.domain.vo.MenuTreeSelectVo;
 import com.sangeng.domain.vo.MenuVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
@@ -113,6 +114,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
         return removeById(menuId) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }
 
+    @Override
+    public ResponseResult selectAllMenu() {
+        List<MenuTreeSelectVo> menus = getBaseMapper().selectAllMenu();
+        List<MenuTreeSelectVo> menusTree = builderMenuTreeSelect(menus,"0");
+        return ResponseResult.okResult(menusTree);
+    }
+
     private List<Menu> builderMenuTree(List<Menu> menus, Long parentId) {
         List<Menu> menuTree = menus.stream().filter(menu -> menu.getParentId().equals(parentId))
                 .map(menu -> menu.setChildren(getChildren(menu,menus)))
@@ -120,9 +128,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
         return menuTree;
     }
 
+    private List<MenuTreeSelectVo> builderMenuTreeSelect(List<MenuTreeSelectVo> menus, String parentId) {
+        List<MenuTreeSelectVo> menuTree = menus.stream().filter(menu -> menu.getParentId().equals(parentId))
+                .map(menu -> menu.setChildren(getChildrenFromTree(menu,menus)))
+                .collect(Collectors.toList());
+        return menuTree;
+    }
+
     private List<Menu> getChildren(Menu menu, List<Menu> menus) {
         List<Menu> childrenList = menus.stream().filter(m->m.getParentId().equals(menu.getId()))
                 .map(m->m.setChildren(getChildren(m,menus)))
+                .collect(Collectors.toList());
+        return childrenList;
+    }
+
+    private List<MenuTreeSelectVo> getChildrenFromTree(MenuTreeSelectVo menu, List<MenuTreeSelectVo> menus) {
+        List<MenuTreeSelectVo> childrenList = menus.stream().filter(m->m.getParentId().equals(menu.getId()))
+                .map(m->m.setChildren(getChildrenFromTree(m,menus)))
                 .collect(Collectors.toList());
         return childrenList;
     }

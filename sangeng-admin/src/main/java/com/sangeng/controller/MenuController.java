@@ -2,11 +2,14 @@ package com.sangeng.controller;
 
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
+import com.sangeng.domain.vo.RoutersVo;
 import com.sangeng.service.MenuService;
+import com.sangeng.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
+import java.util.List;
 
 @RestController
 @RequestMapping("/system/menu")
@@ -39,5 +42,10 @@ public class MenuController {
     public ResponseResult deleteMenu(@PathVariable("menuId") Long menuId){
         return menuService.deleteMenu(menuId);
      }
+
+    @GetMapping("/treeselect")
+    public ResponseResult treeselect(){
+        return menuService.selectAllMenu();
+    }
 
 }
