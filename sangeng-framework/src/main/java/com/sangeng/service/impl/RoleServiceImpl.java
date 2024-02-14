@@ -10,6 +10,7 @@ import com.sangeng.domain.entity.Role;
 import com.sangeng.domain.entity.RoleMenu;
 import com.sangeng.domain.entity.Tag;
 import com.sangeng.domain.vo.PageVo;
+import com.sangeng.domain.vo.RoleVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
 import com.sangeng.service.RoleMenuService;
@@ -103,6 +104,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
             list.add(roleMenu);
         }
         return roleMenuService.saveBatch(list)? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+    }
+
+    @Override
+    public ResponseResult getRoleInfo(Long id) {
+        Role role = getById(id);
+        RoleVo roleVo = new RoleVo();
+        roleVo.setId(role.getId().toString());
+        roleVo.setRemark(role.getRemark());
+        roleVo.setRoleKey(role.getRoleKey());
+        roleVo.setRoleName(role.getRoleName());
+        roleVo.setRoleSort(role.getRoleSort().toString());
+        roleVo.setStatus(role.getStatus());
+
+        return ResponseResult.okResult(roleVo);
     }
 }
 

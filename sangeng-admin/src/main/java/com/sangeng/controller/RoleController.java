@@ -41,4 +41,9 @@ public class RoleController {
     public ResponseResult addRole(@RequestBody AddRoleDto addRoleDto){
         return roleService.addRole(addRoleDto);
      }
+
+     @GetMapping("/{id}")
+    public ResponseResult getRoleInfo(@PathVariable Long id){
+        return roleService.getRoleInfo(id);
+     }
 }

@@ -5,16 +5,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Menu;
-import com.sangeng.domain.vo.MenuInfoVo;
-import com.sangeng.domain.vo.MenuListVo;
-import com.sangeng.domain.vo.MenuTreeSelectVo;
-import com.sangeng.domain.vo.MenuVo;
+import com.sangeng.domain.entity.RoleMenu;
+import com.sangeng.domain.vo.*;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
 import com.sangeng.service.MenuService;
 import com.sangeng.mapper.MenuMapper;
+import com.sangeng.service.RoleMenuService;
 import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -32,6 +32,9 @@ import java.util.stream.Collectors;
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
     implements MenuService{
+    @Autowired
+    private RoleMenuService roleMenuService;
+
     @Override
     public List<String> selectPermsByUserId(Long id) {
         // 如果是管理员
@@ -119,6 +122,21 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
         List<MenuTreeSelectVo> menus = getBaseMapper().selectAllMenu();
         List<MenuTreeSelectVo> menusTree = builderMenuTreeSelect(menus,"0");
         return ResponseResult.okResult(menusTree);
+    }
+
+    @Override
+    public ResponseResult getRoleMenuTreeSelect(Long id) {
+        List<MenuTreeSelectVo> menus = getBaseMapper().selectAllMenu();
+        List<MenuTreeSelectVo> menusTree = builderMenuTreeSelect(menus,"0");
+        LambdaQueryWrapper<RoleMenu> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(RoleMenu::getRoleId,id).select(RoleMenu::getMenuId);
+        List<RoleMenu> list = roleMenuService.list(wrapper);
+        RoleMenuTreeSelectVo roleMenuTreeSelectVo = new RoleMenuTreeSelectVo();
+
+        List<String> checkedKeys = list.stream().map(RoleMenu::getMenuId).map(String::valueOf).collect(Collectors.toList());
+        roleMenuTreeSelectVo.setCheckedKeys(checkedKeys);
+        roleMenuTreeSelectVo.setMenus(menusTree);
+        return ResponseResult.okResult(roleMenuTreeSelectVo);
     }
 
     private List<Menu> builderMenuTree(List<Menu> menus, Long parentId) {

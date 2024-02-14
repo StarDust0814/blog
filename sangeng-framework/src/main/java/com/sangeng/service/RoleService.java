@@ -23,4 +23,6 @@ public interface RoleService extends IService<Role> {
     ResponseResult treeselect();
 
     ResponseResult addRole(AddRoleDto addRoleDto);
+
+    ResponseResult getRoleInfo(Long id);
 }

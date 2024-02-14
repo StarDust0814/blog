@@ -28,4 +28,6 @@ public interface MenuService extends IService<Menu> {
 
 
     ResponseResult selectAllMenu();
+
+    ResponseResult getRoleMenuTreeSelect(Long id);
 }
