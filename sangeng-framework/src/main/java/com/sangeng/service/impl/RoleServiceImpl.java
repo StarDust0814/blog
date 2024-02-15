@@ -139,6 +139,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
 
         return updateById(role) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }
+
+    @Override
+    public ResponseResult listAllRole() {
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Role::getStatus,"0");
+
+        List<Role> list = list(wrapper);
+        return ResponseResult.okResult(list);
+    }
 }
 
 

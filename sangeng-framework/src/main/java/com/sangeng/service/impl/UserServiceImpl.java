@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.dto.AddUserDto;
 import com.sangeng.domain.entity.User;
+import com.sangeng.domain.entity.UserRole;
 import com.sangeng.domain.vo.PageVo;
 import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
+import com.sangeng.service.UserRoleService;
 import com.sangeng.service.UserService;
 import com.sangeng.mapper.UserMapper;
 import com.sangeng.utils.BeanCopyUtils;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.sql.Struct;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author RS.Meta
@@ -31,6 +36,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Override
     public ResponseResult userInfo() {
@@ -87,6 +95,69 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         page(page,wrapper);
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult addUser(AddUserDto addUserDto) {
+        String userName = addUserDto.getUserName();
+        String nickName = addUserDto.getNickName();
+        String password = addUserDto.getPassword();
+        String phonenumber = addUserDto.getPhonenumber();
+        String email = addUserDto.getEmail();
+        String sex = addUserDto.getSex();
+        String status = addUserDto.getStatus();
+        List<String> roleIds = addUserDto.getRoleIds();
+
+        if(!StringUtils.hasText(userName)){
+            throw new SystemException(AppHttpCodeEnum.USERNAME_NOT_NULL);
+        }
+
+
+
+        // 数据是否已存在判断
+        if(userNameExist(userName)){
+            throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
+        }
+        if(phoneExist(phonenumber)){
+            throw new SystemException(AppHttpCodeEnum.PHONENUMBER_EXIST);
+        }
+        if(emailExist(email)){
+            throw new SystemException(AppHttpCodeEnum.EMAIL_EXIST);
+        }
+        // 加密密码
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User();
+        user.setUserName(userName);
+        user.setNickName(nickName);
+        user.setPassword(encodedPassword);
+        user.setStatus(status);
+        user.setEmail(email);
+        user.setPhonenumber(phonenumber);
+        user.setSex(sex);
+        save(user);
+        List<UserRole> userRoles = new ArrayList<>();
+        for(String roleId : roleIds){
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getId());
+            userRole.setRoleId(Long.parseLong(roleId));
+            userRoles.add(userRole);
+        }
+        userRoleService.saveBatch(userRoles);
+        return ResponseResult.okResult();
+
+
+    }
+
+    private boolean phoneExist(String phonenumber) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getPhonenumber,phonenumber);
+        return count(wrapper) > 0;
+    }
+
+    private boolean emailExist(String email) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getEmail,email);
+        return count(wrapper) > 0;
     }
 
     private boolean nickNameExist(String nickName) {
