@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.AddRoleDto;
 import com.sangeng.domain.dto.UpdateRoleDto;
+import com.sangeng.domain.dto.UpdateRoleInfoDto;
 import com.sangeng.domain.entity.Role;
 import com.sangeng.domain.entity.RoleMenu;
 import com.sangeng.domain.entity.Tag;
@@ -118,6 +119,25 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
         roleVo.setStatus(role.getStatus());
 
         return ResponseResult.okResult(roleVo);
+    }
+
+    @Override
+    public ResponseResult deleteRole(Long id) {
+        return removeById(id) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+    }
+
+    @Override
+    public ResponseResult updateRoleInfo(UpdateRoleInfoDto updateRoleInfoDto) {
+        Role role = new Role();
+        role.setId(Long.parseLong(updateRoleInfoDto.getId()));
+        role.setRoleName(updateRoleInfoDto.getRoleName());
+        role.setRoleKey(updateRoleInfoDto.getRoleKey());
+        role.setRoleSort(updateRoleInfoDto.getRoleSort());
+        role.setStatus(updateRoleInfoDto.getStatus());
+        role.setMenuIds(updateRoleInfoDto.getMenuIds());
+        role.setRemark(updateRoleInfoDto.getRemark());
+
+        return updateById(role) ? ResponseResult.okResult() : ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
     }
 }
 

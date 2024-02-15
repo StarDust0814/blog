@@ -3,6 +3,7 @@ package com.sangeng.controller;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.AddRoleDto;
 import com.sangeng.domain.dto.UpdateRoleDto;
+import com.sangeng.domain.dto.UpdateRoleInfoDto;
 import com.sangeng.domain.entity.Menu;
 import com.sangeng.domain.vo.RoutersVo;
 import com.sangeng.service.MenuService;
@@ -45,5 +46,15 @@ public class RoleController {
      @GetMapping("/{id}")
     public ResponseResult getRoleInfo(@PathVariable Long id){
         return roleService.getRoleInfo(id);
+     }
+
+     @PutMapping
+     public ResponseResult updateRoleInfo(@RequestBody UpdateRoleInfoDto updateRoleInfoDto){
+          return roleService.updateRoleInfo(updateRoleInfoDto);
+      }
+
+     @DeleteMapping("/{id}")
+    public ResponseResult deleteRole(@PathVariable Long id){
+        return roleService.deleteRole(id);
      }
 }

@@ -1,9 +1,11 @@
 package com.sangeng.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.User;
+import com.sangeng.domain.vo.PageVo;
 import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.exception.SystemException;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.sql.Struct;
 
 /**
 * @author RS.Meta
@@ -70,6 +74,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setPassword(encodedPassword);
         save(user);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult listAllUser(Integer pageNum, Integer pageSize, String userName, String phonenumber, String status) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.hasText(userName), User::getUserName, userName);
+        wrapper.eq(StringUtils.hasText(phonenumber),User::getPhonenumber,phonenumber);
+        wrapper.eq(StringUtils.hasText(status), User::getStatus,status);
+
+        Page<User> page = new Page<>(pageNum, pageSize);
+        page(page,wrapper);
+        PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
+        return ResponseResult.okResult(pageVo);
     }
 
     private boolean nickNameExist(String nickName) {

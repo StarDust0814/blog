@@ -3,6 +3,7 @@ package com.sangeng.service;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.AddRoleDto;
 import com.sangeng.domain.dto.UpdateRoleDto;
+import com.sangeng.domain.dto.UpdateRoleInfoDto;
 import com.sangeng.domain.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -25,4 +26,8 @@ public interface RoleService extends IService<Role> {
     ResponseResult addRole(AddRoleDto addRoleDto);
 
     ResponseResult getRoleInfo(Long id);
+
+    ResponseResult deleteRole(Long id);
+
+    ResponseResult updateRoleInfo(UpdateRoleInfoDto updateRoleInfoDto);
 }
