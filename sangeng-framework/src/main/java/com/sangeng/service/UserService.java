@@ -2,6 +2,7 @@ package com.sangeng.service;
 
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.dto.AddUserDto;
+import com.sangeng.domain.dto.UpdateUserDto;
 import com.sangeng.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -21,4 +22,10 @@ public interface UserService extends IService<User> {
     ResponseResult listAllUser(Integer pageNum, Integer pageSize, String userName, String phonenumber, String status);
 
     ResponseResult addUser(AddUserDto addUserDto);
+
+    ResponseResult deleteUser(Long id);
+
+    ResponseResult getUserInfo(Long id);
+
+    ResponseResult updateUser(UpdateUserDto updateUserDto);
 }

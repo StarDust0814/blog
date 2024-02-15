@@ -26,7 +26,8 @@ public enum AppHttpCodeEnum {
     FILE_TYPE_ERROR(512,"文件类型错误"),
     FIELD_NOT_NULL(513,"字段不能为空"),
     MENU_PARENT_ID_ERROR(514,"修改菜单失败，上级菜单不能选择自己"),
-    EXIST_MENU_CHILDREN(515,"存在子菜单，不允许删除" );
+    EXIST_MENU_CHILDREN(515,"存在子菜单，不允许删除" ),
+    CURRENT_USER_DELETE_ERR(516,"当前用户无法删除");
 
     int code;
     String msg;
